@@ -1,0 +1,9 @@
+.root{
+    -fx-background: rgb(34, 49, 63);
+}
+
+#title{
+    -fx-font-size: 20px;
+    -fx-font-family: "Tahoma";
+    -fx-fill: #19B5F5;
+}
