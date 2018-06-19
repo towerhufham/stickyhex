@@ -1,48 +1,97 @@
 package main;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main extends Application {
 
-    @Override
-    public void start(Stage primaryStage) {
-        System.setProperty("prism.lcdtext", "false");
-        primaryStage.setTitle("JavaFX Welcome");
+    HexGrid hexGrid = new HexGrid();
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-
-        grid.setPadding(new Insets(25, 25, 25, 25));
-
-        Text title = new Text("Welcome");
-        title.setId("title");
-        grid.add(title, 0, 0, 16, 1);
-
-        for (int j = 0; j < 12; j++) {
-            for (int i = 0; i < 16; i++) {
-                Label dummyhex = new Label("ce");
-                if (50 < (i + j * 16) && (i + j * 16) < 79) {
-                    dummyhex.setId("highlighted-hex");
-                } else {
-                    dummyhex.setId("default-hex");
-                }
-                grid.add(dummyhex, i, j+1, 1, 1);
-            }
+    private void openFile(File file) {
+        try {
+            byte[] data = Files.readAllBytes(file.toPath());
+//            for (int i = 0; i < 256; i++) {
+//                System.out.println(i + ": " + byteToHex(data[i]));
+//            }
+            HexGrid newgrid = new HexGrid(data);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        Scene scene = new Scene(grid, 800, 600);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        //init stuff
+        System.setProperty("prism.lcdtext", "false");
+        primaryStage.setTitle("Stickyhex");
+
+        //master grid
+        GridPane masterGrid = new GridPane();
+        masterGrid.setAlignment(Pos.CENTER);
+        masterGrid.setHgap(10);
+        masterGrid.setVgap(10);
+        masterGrid.setPadding(new Insets(25, 25, 25, 25));
+
+        //toolbar
+        HBox toolbar = new HBox(8);
+        Button openButton = new Button("Open");
+        openButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                FileChooser chooser = new FileChooser();
+                chooser.setTitle("Open File as Hex Data");
+                File file = chooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    openFile(file);
+                }
+            }
+        });
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Save");
+            }
+        });
+        toolbar.getChildren().addAll(openButton, saveButton);
+        masterGrid.add(toolbar, 0, 0);
+
+        //title
+        Text title = new Text("Stickyhex");
+        title.setId("title");
+        masterGrid.add(title, 0, 1, 16, 1);
+
+        //hex grid
+        //GridPane hexGrid = new HexGrid();
+
+        //scroll pane for hex grid
+        ScrollPane hexScrollPane = new ScrollPane();
+        hexScrollPane.setContent(this.hexGrid);
+        hexScrollPane.setPrefViewportWidth(600);
+        masterGrid.add(hexScrollPane, 0, 2);
+
+        //finish up
+        Scene scene = new Scene(masterGrid, 800, 600);
         primaryStage.setScene(scene);
         scene.getStylesheets().add(Main.class.getResource("style.css").toExternalForm());
-
         primaryStage.show();
     }
     public static void main(String[] args) {
