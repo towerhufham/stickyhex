@@ -41,7 +41,7 @@ public class HexGrid extends GridPane {
                 //Label dummyHex = new Label(randomByteString());
                 int i = x + y * 16;
                 Label dummyHex = new Label(byteToHex(this.data[i]));
-                if (50 < (x + y * 16) && (x + y * 16) < 79) {
+                if (50 < (x + y * 16) && (x + y * 16) < 79) { //dummy values, don't panic
                     dummyHex.setId("highlighted-hex");
                 } else {
                     if (x % 2 == 0) {

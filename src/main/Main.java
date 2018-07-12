@@ -23,6 +23,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Main extends Application {
 
     HexGrid hexGrid = new HexGrid();
+    ScrollPane hexScrollPane = new ScrollPane();
+    GridPane masterGrid = new GridPane();
 
     private void openFile(File file) {
         try {
@@ -30,11 +32,15 @@ public class Main extends Application {
 //            for (int i = 0; i < 256; i++) {
 //                System.out.println(i + ": " + byteToHex(data[i]));
 //            }
-            HexGrid newgrid = new HexGrid(data);
+            loadHexGrid(new HexGrid(data));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void loadHexGrid(HexGrid grid){
+        hexScrollPane.setContent(grid);
     }
 
     @Override
@@ -44,7 +50,6 @@ public class Main extends Application {
         primaryStage.setTitle("Stickyhex");
 
         //master grid
-        GridPane masterGrid = new GridPane();
         masterGrid.setAlignment(Pos.CENTER);
         masterGrid.setHgap(10);
         masterGrid.setVgap(10);
@@ -83,7 +88,6 @@ public class Main extends Application {
         //GridPane hexGrid = new HexGrid();
 
         //scroll pane for hex grid
-        ScrollPane hexScrollPane = new ScrollPane();
         hexScrollPane.setContent(this.hexGrid);
         hexScrollPane.setPrefViewportWidth(600);
         masterGrid.add(hexScrollPane, 0, 2);
@@ -94,6 +98,7 @@ public class Main extends Application {
         scene.getStylesheets().add(Main.class.getResource("style.css").toExternalForm());
         primaryStage.show();
     }
+
     public static void main(String[] args) {
         launch(args);
     }
