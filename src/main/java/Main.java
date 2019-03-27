@@ -1,4 +1,4 @@
-package main;
+package main.java;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -18,7 +17,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Main extends Application {
 
@@ -85,7 +83,7 @@ public class Main extends Application {
         masterGrid.add(title, 0, 1, 16, 1);
 
         //hex grid
-        //GridPane hexGrid = new HexGrid();
+        //GridPane hexGrid = new main.HexGrid();
 
         //scroll pane for hex grid
         hexScrollPane.setContent(this.hexGrid);
@@ -95,7 +93,7 @@ public class Main extends Application {
         //finish up
         Scene scene = new Scene(masterGrid, 800, 600);
         primaryStage.setScene(scene);
-        scene.getStylesheets().add(Main.class.getResource("style.css").toExternalForm());
+        scene.getStylesheets().add("css/style.css");
         primaryStage.show();
     }
 
